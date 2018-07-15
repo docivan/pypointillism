@@ -16,46 +16,20 @@ img_h = src_img.shape[0]
 
 img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
 
+print("Computing luminosity channel...")
 lum = [0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2] for y in img for x in y]
 
-print(len(lum))
-print("mean=", np.mean(lum))
-print("median=", np.median(lum))
-print("std=", np.std(lum))
-
-bins = np.arange(0, 255, 10)
-plt.hist(lum, bins=bins)
-plt.title("Histogram")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-#plt.show()
-
+print("Normalizing...")
 lum -= np.median(lum)
 lum /= np.std(lum)
-
-bins = np.arange(min(lum), max(lum), (max(lum)-min(lum))/20)
-plt.hist(lum, bins=bins)
-plt.title("Histogram")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-#plt.show()
-
 lum = np.abs(lum)
-
-bins = np.arange(min(lum), max(lum), (max(lum)-min(lum))/20)
-plt.hist(lum, bins=bins)
-plt.title("Histogram")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-#plt.show()
-
-print(min(lum), max(lum))
 
 lum_max = max(lum)
 
 lum_accum = []
 sum = 0
 
+print("Accumulating...")
 for i in lum:
     sum += i
     lum_accum.append(sum)
@@ -90,6 +64,7 @@ ctx.rectangle(0, 0, img_w, img_h)
 ctx.set_source_rgba(0,0,0,1)
 ctx.fill()
 
+print("Painting...")
 for i in range(points):
     if i % 100 == 0:
         print(i)
